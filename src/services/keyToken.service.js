@@ -1,10 +1,12 @@
+'use strict'
+
 const keyTokenModel = require("../models/keyToken.model")
 
 class keyTokenService{
 
     static createKeyOfToken = async ({publicKey, userId}) => {
 
-        const keyToken = keyTokenModel.create({
+        const keyToken = await keyTokenModel.create({
             userId: userId,
             publicKey: publicKey
         })
