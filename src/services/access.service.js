@@ -7,7 +7,9 @@ const keyTokenService = require("./keyToken.service")
 const { createTokenPair } = require("../auth/authUtils")
 const { getInfoData } = require("../utils")
 const { BadRequestError, InternalServerError } = require("../core/error.response")
+const ShopRepository = require("../Repository/ShopRepo")
 
+const ShopHelper = new ShopRepository
 const RoleShop = {
     SHOP: 'SHOP',
     WRITER: 'WRITER',
@@ -16,16 +18,17 @@ const RoleShop = {
 }
 
 class AccessService {
-    static signUp = async ({name, email, password}) => {
+    static signUp = async ({nameShop, emailShop, passwordShop}) => {
             //step1: check email exists?
-            const holderShop = await shopModel.findOne({email}).lean()
+            const holderShop = await ShopHelper.getOneByConditions({email: emailShop})
+            console.log(holderShop)
             if(holderShop){
                 throw new BadRequestError('Shop already Exists!')
             }
             //step2: password after 
-            const passwordHash = await bcrypt.hash(password, 10)
+            const passwordHash = await bcrypt.hash(passwordShop, 10)
             const newShop = await shopModel.create({
-                name,email,password: passwordHash, roles: [RoleShop.SHOP]
+                name : nameShop,email: emailShop,password: passwordHash, roles: [RoleShop.SHOP]
             })
             if(newShop){
                 //created privateKey, publicKey 

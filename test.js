@@ -12,18 +12,18 @@ const crypto = require('crypto')
 //     enum: ['0000','1111','2222']
 //   }
 // })
-function test(...apm){
-  console.log(apm)
-  apm.value+=1
-  
+class classofsomething {
+  #privatevar;
+  constructor(){
+  this.#privatevar = 5
+  }
+  getPrivatevar = () => {
+    return this.#privatevar
+  }
+
+
 }
-function test2({apm}){
-  apm = apm +1
-  
-}
-let obj = {
-  value : 10
-}
-test(obj)
-console.log(obj)
+
+classofsomething temp = new classofsomething()
+console.log(temp.getPrivatevar())
 // console.log(crypto.randomBytes(64).toString('hex'))
