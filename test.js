@@ -5,25 +5,35 @@ mongoose.connect(connectString).then(_ => console.log('Connected Mongodb Success
 .catch(err => console.log(`Error Connect`,err))
 
 const crypto = require('crypto')
-// const newSchema = new Schema({
-//   user:{
-//     type: [String],
-//     required: true,
-//     enum: ['0000','1111','2222']
-//   }
-// })
-class classofsomething {
-  #privatevar;
-  constructor(){
-  this.#privatevar = 5
+const newSchema = new Schema({
+  user:{
+    type: String,
+    required: true,
+  
+  },
+  conssa: {
+    type: String,
+    required: true
+  },
+  wtf: {
+    type: Number
   }
-  getPrivatevar = () => {
-    return this.#privatevar
-  }
+})
+const temp = mongoose.model('tempa', newSchema)
+
+const test1= new temp({
+  user: "Haha",
+  conssa: "hehe",
+  wtf: 123
+})
+temp.findOne({
+  user: 'Haha'
+}).select('-user -conssa').then((data) => {
+  data.save()
+  console.log(data)
+})
 
 
-}
+ temp.findOne(test1)
 
-classofsomething temp = new classofsomething()
-console.log(temp.getPrivatevar())
 // console.log(crypto.randomBytes(64).toString('hex'))

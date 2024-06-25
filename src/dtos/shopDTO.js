@@ -42,8 +42,14 @@ class shopDTO extends baseDTO{
         }
     
     }
-    validateCreate(){
+    validateSignup(){
         const fields = ['nameShop', 'emailShop', 'passwordShop','statusShop']
+        const joiSchemaShop = _.pick(this.validateJoiSchemaShop, fields)
+        const validateFieldShop = _.pick(this.validateFieldShop, fields)
+        return Joi.object(joiSchemaShop).validate(validateFieldShop)
+    }
+    validateLogin(){
+        const fields = ['emailShop', 'passwordShop']
         const joiSchemaShop = _.pick(this.validateJoiSchemaShop, fields)
         const validateFieldShop = _.pick(this.validateFieldShop, fields)
         return Joi.object(joiSchemaShop).validate(validateFieldShop)

@@ -10,14 +10,20 @@ var keySchema = new Schema({
         required: true,
         ref: 'Shop'
     },
+    
     publicKey:{
         type:String,
         required:true,
         
     },
-    RefreshToken:{
+
+    refreshTokensUsed:{
         type:Array,
         default: []
+    },
+    refreshTokenInUse:{
+        type: String,
+        required: true
     }
 }, {
     timestamps: true,
