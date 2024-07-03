@@ -1,5 +1,5 @@
 'use strict'
-const {mongoose : model, Schema} = require('mongoose'); // Erase if already required
+const {mongoose : model, Schema, Types, default: mongoose} = require('mongoose'); // Erase if already required
 
 const DOCUMENT_NAME = {
     PRODUCT: "Product",
@@ -32,9 +32,10 @@ var productSchema = new Schema({
         type: Number,
         required: true
     },
-    product_quantity:{
-        type: Number,
-        enum: ['Electronics', 'Clothing', 'Furniture']
+    product_type:{
+        type: String,
+        required: true,
+        enum: ['Electronic', 'Clothing', 'Furniture']
     },
     product_shop: {
         type: Schema.Types.ObjectId, ref: 'Shop'
@@ -52,7 +53,10 @@ var productSchema = new Schema({
 var clothingSchema = new Schema({
     brand: {type: String, require: true},
     size: String,
-    material: String
+    material: String,
+    product_shop: {
+        type: Schema.Types.ObjectId, ref: 'Shop'
+    },
 },{
     collection: COLLECTION_NAME.CLOTH,
     timestamps: true
@@ -61,15 +65,18 @@ var clothingSchema = new Schema({
 var electronicSchema = new Schema({
     manufacturer:  {type: String, require: true},
     model: String,
-    collection: String
+    version: String,
+    product_shop: {
+        type: Schema.Types.ObjectId, ref: 'Shop'
+    },
 },{
-    collection: COLLECTION_NAME.CLOTH,
+    collection: COLLECTION_NAME.ELECTRONIC,
     timestamps: true
 })
 
 //Export the model
 module.exports = {
-    product: model(DOCUMENT_NAME.CLOTH, productSchema),
-    electronics: model(DOCUMENT_NAME.ELECTRONIC, electronicSchema),
-    clothing: model(DOCUMENT_NAME.CLOTH,clothingSchema)
+    product: mongoose.model(DOCUMENT_NAME.PRODUCT, productSchema),
+    electronic: mongoose.model(DOCUMENT_NAME.ELECTRONIC, electronicSchema),
+    clothing: mongoose.model(DOCUMENT_NAME.CLOTH,clothingSchema)
 }

@@ -1,5 +1,6 @@
 class BaseRepository {
     constructor({ Model }){
+       
         this.Model =  Model ? Model : null;
     }
 
