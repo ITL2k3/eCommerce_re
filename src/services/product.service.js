@@ -1,22 +1,28 @@
 const {ProductRepository,
     ClothingRepository,
-    ElectronicRepository } = require('../Repository/ProductRepo');
+    ElectronicRepository, 
+    FurnitureRepository} = require('../Repositories/ProductRepo');
 const { BadRequestError, InternalServerError } = require('../core/error.response')
-const {product, electronic, clothing} = require('../models/product.model')
 
 const productHelper = new ProductRepository()
 const clothingHelper = new ClothingRepository()
 const electronicHelper = new ElectronicRepository()
+const furnitureHelper = new FurnitureRepository()
 
 class ProductFactory{
+
+    static productRegistry = {}
+
+    static productRegister (type, classRef) {
+        this.productRegistry[type] = classRef
+    }
    
     static async createProduct(type, payload){
-        switch(type){
-            case "Clothing": return new Clothing(payload).createProduct(); break;
-            case "Electronic": return  new Electronic(payload).createProduct(); break;
-            default: throw new InternalServerError(`Invalid Product Types ${type}`)
-
-        }
+      
+        const productClass = this.productRegistry[type]
+        
+        if(!productClass) throw new BadRequestError(`Invalid product_type ${type}`)
+        return new productClass(payload).createProduct()
     }
 
 }
@@ -73,12 +79,32 @@ class Electronic extends Product {
            ...this.product_attributes,
            product_shop : this.product_shop
         })
-        console.log(newElectronic)
+
         if(!newElectronic) throw new InternalServerError()
         const newProduct = await super.createProduct(newElectronic._id)
         if(!newProduct) throw new InternalServerError()
         return newProduct
     }
 }
+
+
+class Furniture extends Product {
+    async createProduct(){
+        
+        const newFurniture = await furnitureHelper.create({
+           ...this.product_attributes,
+           product_shop : this.product_shop
+        })
+    
+        if(!newFurniture) throw new InternalServerError()
+        const newProduct = await super.createProduct(newFurniture._id)
+        if(!newProduct) throw new InternalServerError()
+        return newProduct
+    }
+}
+
+ProductFactory.productRegister("Electronic", Electronic)
+ProductFactory.productRegister("Furniture", Furniture)
+ProductFactory.productRegister("Clothing", Clothing)
 
 module.exports =  ProductFactory

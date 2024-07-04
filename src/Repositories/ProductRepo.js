@@ -1,5 +1,5 @@
 const BaseRepository = require("./baseRepo");
-const {product, electronic, clothing} = require('../models/product.model')
+const {product, electronic, clothing, furniture} = require('../models/product.model')
 class ProductRepository extends BaseRepository {
     constructor(Model){
         super(Model ? Model : {Model:product})
@@ -21,8 +21,17 @@ class ElectronicRepository extends ProductRepository{
     }
     
 }
+class FurnitureRepository extends ProductRepository{
+    constructor(){
+        super({
+            Model: furniture
+        })
+    }
+    
+}
 module.exports = {
     ProductRepository,
     ClothingRepository,
-    ElectronicRepository
+    ElectronicRepository,
+    FurnitureRepository
 }

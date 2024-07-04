@@ -7,7 +7,7 @@ const keyTokenService = require("./keyToken.service")
 const { createTokenPair } = require("../auth/authUtils")
 const { getInfoData, createRandKeys } = require("../utils")
 const { BadRequestError, InternalServerError, AuthFailureError, ForbiddenError } = require("../core/error.response")
-const ShopRepository = require("../Repository/ShopRepo")
+const ShopRepository = require("../Repositories/ShopRepo")
 const { get } = require("lodash")
 
 const ShopHelper = new ShopRepository
