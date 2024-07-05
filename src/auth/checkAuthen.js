@@ -10,6 +10,7 @@ const HEADER = {
 }
 
 const checkApiKey = async (req, res, next) => {
+    
     const key = req.headers[HEADER.API_KEY]?.toString()
     if(!key){
         throw new AuthFailureError('Access Denied')

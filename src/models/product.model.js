@@ -67,6 +67,11 @@ var productSchema = new Schema({
     timestamps: true,
     collection: COLLECTION_NAME.PRODUCT
 });
+//create index
+productSchema.index({
+    product_name: "text" 
+})
+
 //define middleware: runs before .save()
 productSchema.pre('save', function(next){
     this.product_slug = slugify(this.product_name, {lower: true})

@@ -2,7 +2,8 @@ const {ProductRepository,
     ClothingRepository,
     ElectronicRepository, 
     FurnitureRepository} = require('../Repositories/ProductRepo');
-const { BadRequestError, InternalServerError } = require('../core/error.response')
+const { BadRequestError, InternalServerError } = require('../core/error.response');
+const { getInfoData } = require('../utils');
 
 const productHelper = new ProductRepository()
 const clothingHelper = new ClothingRepository()
@@ -22,7 +23,50 @@ class ProductFactory{
         const productClass = this.productRegistry[type]
         
         if(!productClass) throw new BadRequestError(`Invalid product_type ${type}`)
-        return new productClass(payload).createProduct()
+        const newProduct = await new productClass(payload).createProduct()
+        return getInfoData({
+                fields: ['product_name','product_thumb'
+                    ,'product_description', 'product_price',
+                    'product_quantity', 'product_type',
+                    'product_shop','product_attributes',
+                    'product_ratingsAverage'
+                ], object : newProduct})
+        
+        
+    }
+
+    static async searchProductByName({keyWord}){
+       
+        const regExpString = new RegExp(keyWord)
+        return await productHelper.searchProduct(keyWord)
+
+
+
+    }
+
+    static async getAllPublicProduct(){ 
+        return await productHelper.getAllPublic()
+    }
+
+    static async getAllDraftsForShop(shopId){
+        if(!shopId) throw new InternalServerError()
+        return await productHelper.getAllDraftByShopId(shopId)
+    }
+
+    static async pulishProductForShop(shopId, productId){
+        if(!shopId || !productId) throw new InternalServerError()
+        const updatedProduct = await productHelper.pulishProductByProductId(shopId,productId)
+        if(!updatedProduct) throw new BadRequestError("Bad Request")
+        return updatedProduct
+        
+
+    }
+    static async unPulishProductForShop(shopId, productId){
+        if(!shopId || !productId) throw new InternalServerError()
+        const updatedProduct = await productHelper.unPulishProductByProductId(shopId,productId)
+        if(!updatedProduct) throw new BadRequestError("Bad Request")
+        return updatedProduct
+
     }
 
 }
